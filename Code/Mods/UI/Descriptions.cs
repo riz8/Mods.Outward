@@ -677,11 +677,6 @@ public class Descriptions : AMod, IDelayedInit
     [HarmonyPrefix, HarmonyPatch(typeof(ItemDisplay), nameof(ItemDisplay.RefreshEnchantedIcon))]
     private static void ItemDisplay_RefreshEnchantedIcon_Pre(ItemDisplay __instance)
     {
-        #region quit
-        if (!__instance.m_refItem.TryAs(out RecipeItem recipe))
-            return;
-        #endregion
-
         // Cache
         Image icon = __instance.FindChild<Image>("Icon");
         Image border = icon.FindChild<Image>("border");
@@ -689,6 +684,11 @@ public class Descriptions : AMod, IDelayedInit
         //Defaults
         icon.color = Color.white;
         border.color = Color.white;
+
+        #region quit
+        if (!__instance.m_refItem.TryAs(out RecipeItem recipe))
+            return;
+        #endregion
 
         // Quit
         if (!__instance.LocalCharacter.HasLearnedRecipe(recipe.Recipe))

@@ -401,55 +401,49 @@
       <HintPath>packages\UnityEngine.Modules.2022.2.7\lib\net45\UnityEngine.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Vheos.Helpers">
-      <HintPath>..\Helpers\bin\UNITY\Vheos.Helpers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Vheos.Mods.Core">
-      <HintPath>..\Mods.Core\bin\UNITY\Vheos.Mods.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Vheos.Tools.TraitEqualizer">
-      <HintPath>..\Tools.TraitEqualizer\bin\-\Vheos.Tools.TraitEqualizer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Libs\Core\Vheos.Mods.Core.csproj">
+      <Project>{c4989977-8132-4ece-80c9-dbb7bc36d98f}</Project>
+      <Name>Vheos.Mods.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="Libs\Helpers\Vheos.Helpers.csproj">
+      <Project>{74b61806-6f02-4f3f-b795-bfa76e85162e}</Project>
+      <Name>Vheos.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="Libs\TraitEqualizer\Vheos.Tools.TraitEqualizer.csproj">
+      <Project>{dc297e8a-f472-458e-892f-c5985b4cef8e}</Project>
+      <Name>Vheos.Tools.TraitEqualizer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>:: Common
-set PluginsSubpath=Vheos\
-set ResourcesPath=$(ProjectDir)Resources\
-set ReleasesPath=$(ProjectDir)Private\Releases\
-::set ReadmeName=README.md
-set IsDebug=$(DefineConstants.Contains('DEBUG'))
+    <PostBuildEvent>set ResourcesPath=$(ProjectDir)Resources\
 
-    :: Project
-    set GamePath=D:\Steam\steamapps\common\Outward\Outward_Defed\BepInEx\plugins\
-    :: set ExeName=Outward Definitive Edition.exe
-    :: set ZipName=VMP
-    :: set Version=X.Y.Z
-    :: set ThunderstorePath=%25ReleasesPath%25Thunderstore\
+set CoreDLL=$(ProjectDir)Libs\Core\bin\UNITY\Vheos.Mods.Core.dll
+set TraitsDLL=$(ProjectDir)Libs\TraitEqualizer\bin\UNITY\Vheos.Tools.TraitEqualizer.dll
+set HelpersDLL=$(ProjectDir)Libs\Helpers\bin\UNITY\Vheos.Helpers.dll
 
-:: Common
-rd /q /s "%25GamePath%25%25PluginsSubpath%25"
-xcopy /y /s "$(TargetDir)$(TargetName).dll" "%25GamePath%25%25PluginsSubpath%25"
-xcopy /y /s "$(TargetDir)Vheos.Mods.Core.dll" "%25GamePath%25%25PluginsSubpath%25"
-xcopy /y /s "$(TargetDir)Vheos.Helpers.dll" "%25GamePath%25%25PluginsSubpath%25"
-xcopy /y /s %25ResourcesPath%25 "%25GamePath%25%25PluginsSubpath%25"
+set OutputFolder=D:\Steam\steamapps\common\Outward\Outward_Defed\BepInEx\plugins\Vheos
 
-    :: Project
-    xcopy /y /s "$(TargetDir)Vheos.Tools.TraitEqualizer.dll" "%25GamePath%25%25PluginsSubpath%25"
+:: CREATE PLUGIN FOLDER
+:: rm -r "%25OutputFolder%25"
+:: mkdir "OutputFolder%25"
 
-:: if %25IsDebug%25==True (
-    :: start "" "%25GamePath%25%25ExeName%25"
-:: ) else if %25IsDebug%25==False (
-    ::xcopy /y /s "%25GamePath%25%25PluginsSubpath%25" "%25ThunderstorePath%25%25PluginsSubpath%25"
-    :: xcopy /y "$(ProjectDir)%25ReadmeName%25" "%25ThunderstorePath%25"
-    :: powershell Compress-Archive -Path %25ThunderstorePath%25* -DestinationPath %25ReleasesPath%25%25ZipName%25_%25Version%25_TS.zip -Force    
-    :: powershell Compress-Archive -Path %25ThunderstorePath%25BepInEx\ -DestinationPath %25ReleasesPath%25%25ZipName%25_%25Version%25.zip -Force  
-    :: rd /q /s "%25ThunderstorePath%25BepInEx\"
-    :: del /q "%25ThunderstorePath%25%25ReadmeName%25"
-:: )</PostBuildEvent>
+:: COPY DLL
+xcopy /y /s "$(TargetPath)" "%25OutputFolder%25"
+
+:: COPY CORE DLL
+xcopy /y /s "%25CoreDLL%25" "%25OutputFolder%25"
+
+:: COPY TRAITS DLL
+xcopy /y /s "%25TraitsDLL%25" "%25OutputFolder%25"
+
+:: COPY HELPERS DLL
+xcopy /y /s "%25HelpersDLL%25" "%25OutputFolder%25"
+
+:: COPY RESOURCES
+xcopy /y /s %25ResourcesPath%25 "%25OutputFolder%25"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

@@ -1,4 +1,4 @@
-﻿namespace Vheos.Mods.Outward;
+namespace Vheos.Mods.Outward;
 
 public class Camera : AMod, IDelayedInit, IUpdatable
 {
@@ -277,8 +277,7 @@ public class Camera : AMod, IDelayedInit, IUpdatable
         }
     }
 
-    [HarmonyPostfix, HarmonyPatch(typeof(Character), nameof(Character.SetZoomMode))]
-    private static void Character_SetZoomMode_Post(Character __instance, ref bool _zoomed)
+    private static void Handle_ZoomMode(Character __instance, bool _zoomed)
     {
         Players.Data player = Players.GetLocal(__instance);
         #region quit
@@ -289,6 +288,14 @@ public class Camera : AMod, IDelayedInit, IUpdatable
         __instance.CharacterCamera.ZoomSensModifier = 1f;
         _perPlayerSettings[player.ID].StartAimCoroutine(__instance, _zoomed);
     }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(Character), nameof(Character.SetZoomMode))]
+    private static void Character_SetZoomMode_Post(Character __instance, ref bool _zoomed)
+        => Handle_ZoomMode(__instance, _zoomed);
+
+    [HarmonyPostfix, HarmonyPatch(typeof(Character), nameof(Character.WeaponChanged))]
+    private static void Character_WeaponChanged_Post(Character __instance)
+        => Handle_ZoomMode(__instance, false); // false = Force leaving zoom in
 
     [HarmonyPrefix, HarmonyPatch(typeof(CharacterCamera), nameof(CharacterCamera.UpdateZoom))]
     private static bool CharacterCamera_UpdateZoom_Pre(CharacterCamera __instance)

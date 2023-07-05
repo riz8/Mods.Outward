@@ -23,7 +23,7 @@ public class AI : AMod
         _retargetCurrentToNearestRatio = CreateSetting(nameof(_retargetCurrentToNearestRatio), 1.5f, FloatRange(1f, 2f));
         _retargetDetectAllPlayers = CreateSetting(nameof(_retargetDetectAllPlayers), true);
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

@@ -82,7 +82,7 @@ public class Stashes : AMod, IUpdatable
     => ModSections.SurvivalAndImmersion;
     protected override string Description
     => "";
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

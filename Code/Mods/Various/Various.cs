@@ -52,7 +52,7 @@ public class Various : AMod, IUpdatable
             TryUpdateTemperatureData();
         });
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

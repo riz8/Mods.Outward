@@ -249,7 +249,7 @@ public class Descriptions : AMod, IDelayedInit
     "(automatic scaling, thickness)";
     protected override string SectionOverride
     => ModSections.UI;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

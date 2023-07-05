@@ -83,7 +83,7 @@ public class Merchants : AMod, IDelayedInit
        "• Set price for learning mutually exclusive skills";
     protected override string SectionOverride
     => ModSections.SurvivalAndImmersion;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

@@ -20,7 +20,7 @@ public class Traps : AMod
                 _friendlyFire.Value = false;
         });
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

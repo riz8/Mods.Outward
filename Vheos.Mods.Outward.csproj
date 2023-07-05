@@ -35,11 +35,11 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Code\Core\ModSections.cs" />
-    <Compile Include="Code\Core\Players.cs" />
-    <Compile Include="Code\Core\Prefabs.cs" />
-    <Compile Include="Code\Core\GameInput.cs" />
-    <Compile Include="Code\Core\Presets.cs" />
+    <Compile Include="Code\ModSections.cs" />
+    <Compile Include="Code\Players.cs" />
+    <Compile Include="Code\Prefabs.cs" />
+    <Compile Include="Code\GameInput.cs" />
+    <Compile Include="Code\Presets.cs" />
     <Compile Include="Code\Mods\Combat\Dodge.cs" />
     <Compile Include="Code\Mods\Survival\Crafting.cs" />
     <Compile Include="Code\Mods\Combat\AI.cs" />
@@ -75,10 +75,62 @@
     <Compile Include="Code\Utility\Enums\ArmorSlots.cs" />
     <Compile Include="Code\Utility\Enums\SkillSlotLevel.cs" />
     <Compile Include="Code\Utility\Extensions.cs" />
-    <Compile Include="Code\GlobalUsings.cs" />
+    <Compile Include="GlobalUsings.cs" />
     <Compile Include="Code\Utility\Defaults.cs" />
     <Compile Include="Code\Utility\Utils.cs" />
-    <Compile Include="Code\Core\Main.cs" />
+    <Compile Include="Code\Main.cs" />
+    <Compile Include="Code\Core\AMod.cs" />
+    <Compile Include="Code\Core\AModSetting.cs" />
+    <Compile Include="Code\Core\BepInExEntryPoint.cs" />
+    <Compile Include="Code\Core\ColorSettings.cs" />
+    <Compile Include="Code\Core\ConfigHelper.cs" />
+    <Compile Include="Code\Core\ConfigurationManagerAttributes.cs" />
+    <Compile Include="Code\Core\Extensions.cs" />
+    <Compile Include="Code\Core\Interfaces.cs" />
+    <Compile Include="Code\Core\Log.cs" />
+    <Compile Include="Code\Core\ModSetting.cs" />
+    <Compile Include="Code\Core\PerPlayerSettings.cs" />
+    <Compile Include="Code\Core\PerValueSettings.cs" />
+    <Compile Include="Code\Core\Presets.cs" />
+    <Compile Include="Code\Helpers\Collections\Extensions\Extensions_ICollections.cs" />
+    <Compile Include="Code\Helpers\Collections\Extensions\Extensions_IDictionary.cs" />
+    <Compile Include="Code\Helpers\Collections\Extensions\Extensions_IEnumerable.cs" />
+    <Compile Include="Code\Helpers\Collections\Extensions\Extensions_IList.cs" />
+    <Compile Include="Code\Helpers\Common\CustomDisposable.cs" />
+    <Compile Include="Code\Helpers\Common\Extensions.cs" />
+    <Compile Include="Code\Helpers\Common\Utility.cs" />
+    <Compile Include="Code\Helpers\Dump\Enums\AccessModifiers.cs" />
+    <Compile Include="Code\Helpers\Dump\Enums\ClassMembers.cs" />
+    <Compile Include="Code\Helpers\Dump\Enums\MemberData.cs" />
+    <Compile Include="Code\Helpers\Dump\Enums\ScopeModifiers.cs" />
+    <Compile Include="Code\Helpers\Dump\Extensions.cs" />
+    <Compile Include="Code\Helpers\KeyCodeCache\Extensions.cs" />
+    <Compile Include="Code\Helpers\KeyCodeCache\KeyCodeCache.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Color.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_float.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_int.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Quaternion.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Vector2.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Vector2Int.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Vector3.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Vector3Int.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Vector4.cs" />
+    <Compile Include="Code\Helpers\Math\Extensions\Extensions_Vector4Int.cs" />
+    <Compile Include="Code\Helpers\Math\Structs\Vector4Int.cs" />
+    <Compile Include="Code\Helpers\Reflection\Extensions.cs" />
+    <Compile Include="Code\Helpers\RNG\Extensions.cs" />
+    <Compile Include="Code\Helpers\RNG\RNG.cs" />
+    <Compile Include="Code\Helpers\UnityObjects\Extensions\Extensions.cs" />
+    <Compile Include="Code\Helpers\UnityObjects\Extensions\Extensions_Camera.cs" />
+    <Compile Include="Code\Helpers\UnityObjects\Extensions\Extensions_Component.cs" />
+    <Compile Include="Code\Helpers\UnityObjects\Extensions\Extensions_GameObject.cs" />
+    <Compile Include="Code\Helpers\UnityObjects\Extensions\Extensions_MonoBehaviour.cs" />
+    <Compile Include="Code\Helpers\UnityObjects\Extensions\Extensions_Sprite.cs" />
+    <Compile Include="Code\TraitEqualizer\Trait.cs" />
+    <Compile Include="Code\TraitEqualizer\TraitElement.cs" />
+    <Compile Include="Code\TraitEqualizer\TraitEqualizer.cs" />
+    <Compile Include="Code\TraitEqualizer\TraitList.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -103,6 +155,9 @@
     <Reference Include="BepInEx, Version=5.4.19.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\BepInEx.BaseLib.5.4.19\lib\net35\BepInEx.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="ConfigurationManager">
+      <HintPath>..\BepInEx.ConfigurationManager\Release\BepInEx\plugins\ConfigurationManager.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.dll</HintPath>
@@ -133,6 +188,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\UnityEngine.Modules.2022.2.7\lib\net45\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -402,20 +460,6 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Libs\Core\Vheos.Mods.Core.csproj">
-      <Project>{c4989977-8132-4ece-80c9-dbb7bc36d98f}</Project>
-      <Name>Vheos.Mods.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="Libs\Helpers\Vheos.Helpers.csproj">
-      <Project>{74b61806-6f02-4f3f-b795-bfa76e85162e}</Project>
-      <Name>Vheos.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="Libs\TraitEqualizer\Vheos.Tools.TraitEqualizer.csproj">
-      <Project>{dc297e8a-f472-458e-892f-c5985b4cef8e}</Project>
-      <Name>Vheos.Tools.TraitEqualizer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>set ResourcesPath=$(ProjectDir)Resources\
@@ -434,13 +478,13 @@ set OutputFolder=D:\Steam\steamapps\common\Outward\Outward_Defed\BepInEx\plugins
 xcopy /y /s "$(TargetPath)" "%25OutputFolder%25"
 
 :: COPY CORE DLL
-xcopy /y /s "%25CoreDLL%25" "%25OutputFolder%25"
+:: xcopy /y /s "%25CoreDLL%25" "%25OutputFolder%25"
 
 :: COPY TRAITS DLL
-xcopy /y /s "%25TraitsDLL%25" "%25OutputFolder%25"
+:: xcopy /y /s "%25TraitsDLL%25" "%25OutputFolder%25"
 
 :: COPY HELPERS DLL
-xcopy /y /s "%25HelpersDLL%25" "%25OutputFolder%25"
+:: xcopy /y /s "%25HelpersDLL%25" "%25OutputFolder%25"
 
 :: COPY RESOURCES
 xcopy /y /s %25ResourcesPath%25 "%25OutputFolder%25"</PostBuildEvent>

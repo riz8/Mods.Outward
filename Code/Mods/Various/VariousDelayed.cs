@@ -40,7 +40,7 @@ public class VariousDelayed : AMod, IDelayedInit
     => "";
     protected override string ModName
     => "Various (delayed)";
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

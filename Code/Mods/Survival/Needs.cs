@@ -264,7 +264,7 @@ public class Needs : AMod, IDelayedInit
        "• Override drink values and sleep buffs duration";
     protected override string SectionOverride
     => ModSections.SurvivalAndImmersion;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

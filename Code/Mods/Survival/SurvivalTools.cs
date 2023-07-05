@@ -78,7 +78,7 @@ public class SurvivalTools : AMod
     => ModSections.SurvivalAndImmersion;
     protected override string ModName
     => "Tools";
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

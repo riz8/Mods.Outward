@@ -113,7 +113,7 @@ public class SkillLimits : AMod
     => ModSections.Skills;
     protected override string ModName
     => "Limits";
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

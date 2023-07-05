@@ -243,7 +243,7 @@ public class SkillEditor : AMod, IDelayedInit
     => ModSections.Skills;
     protected override string ModName
     => "Editor";
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

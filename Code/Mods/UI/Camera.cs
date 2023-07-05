@@ -174,7 +174,7 @@ public class Camera : AMod, IDelayedInit, IUpdatable
        "• Define presets and smoothly interpolate between them";
     protected override string SectionOverride
     => ModSections.UI;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

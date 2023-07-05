@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Vheos.Tools.TraitEqualizer;
+﻿namespace Vheos.Tools.TraitEqualizer;
 
 public class Trait<T>
 {

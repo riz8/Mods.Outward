@@ -17,7 +17,7 @@ public class Targeting : AMod
         _autoTargetActions = CreateSetting(nameof(_autoTargetActions), AutoTargetActions.None);
         _cameraPitchOffset = CreateSetting(nameof(_cameraPitchOffset), 0f, FloatRange(0, 1));
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

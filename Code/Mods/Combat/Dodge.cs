@@ -18,7 +18,7 @@ public class Dodge : AMod
         _allowMidAttackUntilDamageTaken = CreateSetting(nameof(_allowMidAttackUntilDamageDealt), false);
         _invincibility = CreateSetting(nameof(_invincibility), true);
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

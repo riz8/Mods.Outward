@@ -288,7 +288,7 @@ public class GUI : AMod, IDelayedInit, IUpdatable
        "• Vertical splitscreen (with shop tweaks)";
     protected override string SectionOverride
     => ModSections.UI;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

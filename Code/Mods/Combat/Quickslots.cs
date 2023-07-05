@@ -18,7 +18,7 @@ public class Quickslots : AMod
             foreach (var skillByType in group.Value)
                 _skillContextsByID.Add(skillByType.Value, group.Key);
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Vheos.Tools.TraitEqualizer;
+﻿namespace Vheos.Tools.TraitEqualizer;
 
 public class TraitList<T>
 {

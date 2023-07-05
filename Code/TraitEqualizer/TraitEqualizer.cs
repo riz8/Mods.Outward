@@ -1,7 +1,4 @@
 ﻿namespace Vheos.Tools.TraitEqualizer;
-using System.Collections.Generic;
-
-using System.Linq;
 using System.Text;
 using Vheos.Helpers.Common;
 using Vheos.Helpers.RNG;

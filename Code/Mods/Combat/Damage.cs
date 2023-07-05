@@ -22,7 +22,7 @@ public class Damage : AMod
         foreach (var team in Utility.GetEnumValues<Team>())
             _settingsByTeam[team] = new(this, team);
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

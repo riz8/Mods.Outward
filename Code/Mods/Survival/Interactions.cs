@@ -253,7 +253,7 @@ public class Interactions : AMod, IDelayedInit
        "• Disallow certain interactions while in combat";
     protected override string SectionOverride
     => ModSections.SurvivalAndImmersion;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

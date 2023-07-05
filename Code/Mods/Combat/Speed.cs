@@ -31,7 +31,7 @@ public class Speed : AMod, IUpdatable
 
         AddEventOnConfigClosed(UpdateDefaultGameSpeed);
     }
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

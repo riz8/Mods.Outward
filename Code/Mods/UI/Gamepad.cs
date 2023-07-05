@@ -20,7 +20,7 @@ public class Gamepad : AMod, IUpdatable
     => "• Better stash navigation";
     protected override string SectionOverride
     => ModSections.UI;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

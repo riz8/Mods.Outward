@@ -124,7 +124,7 @@ public class Durability : AMod
        "• Randomize starting durability of spawned items";
     protected override string SectionOverride
     => ModSections.SurvivalAndImmersion;
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

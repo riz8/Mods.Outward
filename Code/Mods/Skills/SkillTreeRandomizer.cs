@@ -329,7 +329,7 @@ public class SkillTreeRandomizer : AMod, IDelayedInit
     => ModSections.Skills;
     protected override string ModName
     => "Tree Randomizer";
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

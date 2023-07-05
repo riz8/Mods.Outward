@@ -94,7 +94,7 @@ public class SkillPrices : AMod
     => ModSections.Skills;
     protected override string ModName
     => "Prices";
-    protected override void LoadPreset(string presetName)
+    protected internal override void LoadPreset(string presetName)
     {
         switch (presetName)
         {

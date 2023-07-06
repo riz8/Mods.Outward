@@ -168,6 +168,9 @@ public class Damage : AMod
 #endif
     }
 
+
+    private static Character.Factions[] orig_factions;
+
     [HarmonyPostfix, HarmonyPatch(typeof(PlayerSystem), nameof(PlayerSystem.SetCharacter))]
     static void PlayerSystem_SetCharacter_Post(PlayerSystem __instance, Character _character)
     {
@@ -180,7 +183,7 @@ public class Damage : AMod
         Log.Debug("CHARACTER TARGET SYSTEM: " + _character.m_targetingSystem);
         Log.Debug("CHARACTER TARGET SYSTEM ID: " + _character.m_targetingSystem.GetInstanceID());
 #endif
-
+        orig_factions = _character.m_targetingSystem.TargetableFactions;
         List<Character.Factions> list = new List<Character.Factions>();
         for (int i = 1; i < 10; i++)
         {
@@ -200,6 +203,21 @@ public class Damage : AMod
         Log.Debug("CHARACTER ID: " + _character.GetInstanceID());
         Log.Debug("CHARACTER IS PLAYER: " + _character.IsLocalPlayer);
 #endif
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(TargetingSystem), nameof(TargetingSystem.IsTargetable), new[] { typeof(Character.Factions) })]
+    static void TargetingSystem_IsTargetable_Post(TargetingSystem __instance, ref bool __result, Character.Factions _faction)
+    {
+        Log.Debug("TARGET SYSTEM IS TARGETABLE");
+        for (int i = orig_factions.Length - 1; i >= 0; i--)
+        {
+            if (orig_factions[i].CompareTo(_faction) == 0)
+            {
+                __result = true;
+                return;
+            }
+        }
+        __result = false;
     }
 
     [HarmonyPostfix, HarmonyPatch(typeof(Character), nameof(Character.Awake))]

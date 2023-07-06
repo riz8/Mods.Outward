@@ -1,4 +1,6 @@
-﻿namespace Vheos.Mods.Outward;
+﻿#define TARGETING_DEBUG2
+
+namespace Vheos.Mods.Outward;
 
 public class Damage : AMod
 {
@@ -153,38 +155,98 @@ public class Damage : AMod
                 _knockValue *= _settingsByTeam[Team.Players].FFStabilityDamageMultiplier / 100f;
         }
     }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(TargetingSystem), nameof(TargetingSystem.InitTargetableFaction))]
+    static void TargetingSystem_InitTargetableFaction_Post(TargetingSystem __instance)
+    {
+#if TARGETING_DEBUG
+        Log.Debug("TARGET SYSTEM INIT");
+        Log.Debug("ID: " + __instance.GetInstanceID());
+        Log.Debug("CHARACTER: " + __instance.m_character);
+        Log.Debug("CHARACTER ID: " + __instance.m_character.GetInstanceID());
+        Log.Debug("CHARACTER IS PLAYER: " + __instance.m_character.IsLocalPlayer);
+#endif
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(PlayerSystem), nameof(PlayerSystem.SetCharacter))]
+    static void PlayerSystem_SetCharacter_Post(PlayerSystem __instance, Character _character)
+    {
+#if TARGETING_DEBUG
+        Log.Debug("PLAYER SYSTEM SET CHARACTER");
+        Log.Debug("ID: " + __instance.GetInstanceID());
+        Log.Debug("CHARACTER: " + _character);
+        Log.Debug("CHARACTER ID: " + _character.GetInstanceID());
+        Log.Debug("CHARACTER IS PLAYER: " + _character.IsLocalPlayer);
+        Log.Debug("CHARACTER TARGET SYSTEM: " + _character.m_targetingSystem);
+        Log.Debug("CHARACTER TARGET SYSTEM ID: " + _character.m_targetingSystem.GetInstanceID());
+#endif
+
+        List<Character.Factions> list = new List<Character.Factions>();
+        for (int i = 1; i < 10; i++)
+        {
+            Character.Factions factions = (Character.Factions)i;
+            list.Add(factions);
+        }
+        _character.m_targetingSystem.TargetableFactions = list.ToArray();
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(TargetingSystem), nameof(TargetingSystem.SetCharacter))]
+    static void TargetingSystem_SetCharacter_Post(TargetingSystem __instance, Character _character)
+    {
+#if TARGETING_DEBUG
+        Log.Debug("TARGET SYSTEM SET CHARACTER");
+        Log.Debug("ID: " + __instance.GetInstanceID());
+        Log.Debug("CHARACTER: " + _character);
+        Log.Debug("CHARACTER ID: " + _character.GetInstanceID());
+        Log.Debug("CHARACTER IS PLAYER: " + _character.IsLocalPlayer);
+#endif
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(Character), nameof(Character.Awake))]
+    static void Character_Awake_Post(Character __instance)
+    {
+#if TARGETING_DEBUG
+        Log.Debug("CHARACTER AWAKE");
+        Log.Debug("ID: " + __instance.GetInstanceID());
+        Log.Debug("IS PLAYER: " + __instance.IsLocalPlayer);
+        Log.Debug("TARGET SYSTEM: " + __instance.m_targetingSystem);
+        Log.Debug("TARGET SYSTEM ID: " + __instance.m_targetingSystem.GetInstanceID());
+#endif
+    }
+
+    [HarmonyPrefix, HarmonyPatch(typeof(ShootItem), nameof(ShootItem.Activate))]
+    static void ShootItem_Activate_Postfix(ShootItem __instance, Character _affectedCharacter)
+    {
+#if TARGETING_DEBUG
+        Log.Debug("SHOOT ITEM");
+        Log.Debug("ID: " + __instance.GetInstanceID());
+        Log.Debug("CHARACTER: " + _affectedCharacter);
+        Log.Debug("CHARACTER ID: " + _affectedCharacter.GetInstanceID());
+        Log.Debug("CHARACTER IS PLAYER: " + _affectedCharacter.IsLocalPlayer);
+        Log.Debug("CHARACTER TARGET SYSTEM: " + _affectedCharacter.m_targetingSystem);
+        Log.Debug("CHARACTER TARGET SYSTEM ID: " + _affectedCharacter.m_targetingSystem.GetInstanceID());
+#endif
+    }
+
+    [HarmonyPrefix, HarmonyPatch(typeof(ShootProjectile), nameof(ShootProjectile.Setup))]
+    static void ShootProjectile_Setup_Postfix(ShootProjectile __instance, Character.Factions[] _targetFactions)
+    {
+    }
+
+    [HarmonyPrefix, HarmonyPatch(typeof(Projectile), nameof(Projectile.Setup))]
+    static void Projectile_Setup_Postfix(Projectile __instance, Character.Factions[] _targetFactions)
+    {
+    }
+
     [HarmonyPrefix, HarmonyPatch(typeof(Projectile), nameof(Projectile.Explode), new[] { typeof(Collider), typeof(Vector3), typeof(Vector3), typeof(bool) })]
     static void Prefix(Projectile __instance, UnityEngine.Collider _collider, UnityEngine.Vector3 __1, UnityEngine.Vector3 __2, bool __3)
     {
-        __instance.m_targetableFactions[0] = Character.Factions.Player;
-        //__instance.m_targetableFactions.Add(Character.Factions.Player);
-        Log.Debug("PROJECTILE EXPLODE");
-        Character character = null;
-        if (_collider != null)
+#if TARGETING_DEBUG
+        foreach (Character.Factions faction in __instance.m_targetableFactions)
         {
-            character = _collider.GetCharacterOwner();
+            Log.Debug("FACTIONS: " + faction.ToString());
         }
-        Character character2 = character;
-        if (character2 != null)
-        {
-            Character.Factions char_faction = character2.Faction;
-            Log.Debug("CHARACTER FACTION: " + char_faction);
-            foreach(Character.Factions faction in __instance.m_targetableFactions)
-            {
-                Log.Debug("PROJECTILE FACTIONS: " + faction.ToString());
-            }
-            if (__instance.m_targetableFactions.Contains(character2.Faction))
-            {
-                Log.Debug("PROJECTILE IS SAME FACTION AS CHARACTER 2");
-            }
-            else
-            {
-                Log.Debug("SOMETHING ELSE"); // player shoot player
-            }
-        }
-
-
-
+#endif
     }
 
 

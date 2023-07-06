@@ -153,5 +153,41 @@ public class Damage : AMod
                 _knockValue *= _settingsByTeam[Team.Players].FFStabilityDamageMultiplier / 100f;
         }
     }
+    [HarmonyPrefix, HarmonyPatch(typeof(Projectile), nameof(Projectile.Explode), new[] { typeof(Collider), typeof(Vector3), typeof(Vector3), typeof(bool) })]
+    static void Prefix(Projectile __instance, UnityEngine.Collider _collider, UnityEngine.Vector3 __1, UnityEngine.Vector3 __2, bool __3)
+    {
+        __instance.m_targetableFactions[0] = Character.Factions.Player;
+        //__instance.m_targetableFactions.Add(Character.Factions.Player);
+        Log.Debug("PROJECTILE EXPLODE");
+        Character character = null;
+        if (_collider != null)
+        {
+            character = _collider.GetCharacterOwner();
+        }
+        Character character2 = character;
+        if (character2 != null)
+        {
+            Character.Factions char_faction = character2.Faction;
+            Log.Debug("CHARACTER FACTION: " + char_faction);
+            foreach(Character.Factions faction in __instance.m_targetableFactions)
+            {
+                Log.Debug("PROJECTILE FACTIONS: " + faction.ToString());
+            }
+            if (__instance.m_targetableFactions.Contains(character2.Faction))
+            {
+                Log.Debug("PROJECTILE IS SAME FACTION AS CHARACTER 2");
+            }
+            else
+            {
+                Log.Debug("SOMETHING ELSE"); // player shoot player
+            }
+        }
+
+
+
+    }
+
+
+    //  Log.Debug("AAAA");
     #endregion
 }

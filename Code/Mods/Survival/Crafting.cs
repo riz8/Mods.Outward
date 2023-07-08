@@ -237,7 +237,7 @@ public class Crafting : AMod
                     || _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.Relics) && _itemID.IsContainedIn(RELIC_IDS)
                     || _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.HailfrostWeapons) && _itemID.IsContainedIn(HAILFROST_WEAPONS_IDS)
                     || _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.UniqueWeapons) && _itemID.IsContainedIn(UNIQUE_WEAPONS_IDS)
-                    || TrueHardcore._limitedManualCraftingTrueHardcore.Value && ((int)HardcoreRebalance.HardcoreItems.ElattPiece).CompareTo(_itemID) == 0
+                    || TrueHardcore._trueHardcoreEnabled.Value && ((int)HardcoreRebalance.HardcoreItems.ElattPiece).CompareTo(_itemID) == 0
                     ;
         SetSingleIngredientCrafting(__instance, !isMulti);
     }

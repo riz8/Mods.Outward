@@ -11,18 +11,17 @@ public class TrueHardcore : AMod
     #region Enums
     #endregion
 
-    public static ModSetting<bool> _limitedManualCraftingTrueHardcore;
+    public static ModSetting<bool> _trueHardcoreEnabled;
     protected override void Initialize()
     {
-        _limitedManualCraftingTrueHardcore = CreateSetting(nameof(_limitedManualCraftingTrueHardcore), false);
+        _trueHardcoreEnabled = CreateSetting(nameof(_trueHardcoreEnabled), false);
     }
     protected override void SetFormatting()
     {
-        _limitedManualCraftingTrueHardcore.Format("Enable TrueHardcore craft");
-        _limitedManualCraftingTrueHardcore.Description = "With limited manual crafting, you need to enable this to be able to craft TrueHardcore items.";
+        _trueHardcoreEnabled.Format("Enable TrueHardcore");
     }
     protected override string Description
-    => "• Fixes some incompability between this mod and TrueHardcore";
+    => "• Fixed: Manual Crafting";
     protected override string SectionOverride
     => ModSections.Compatibility;
     protected internal override void LoadPreset(string presetName)
@@ -31,7 +30,7 @@ public class TrueHardcore : AMod
         {
             case nameof(Preset.Vheos_CoopSurvival):
                 ForceApply();
-                _limitedManualCraftingTrueHardcore.Value = false;
+                _trueHardcoreEnabled.Value = false;
                 break;
         }
     }

@@ -1,4 +1,6 @@
 ﻿namespace Vheos.Mods.Outward;
+
+using System;
 using UnityEngine.UI;
 
 public class GUI : AMod, IDelayedInit, IUpdatable
@@ -61,7 +63,7 @@ public class GUI : AMod, IDelayedInit, IUpdatable
         public ModSetting<bool> _startHUDEditor;
         public ModSetting<int> _hudTransparency;
         public ModSetting<bool> _fadingStatusEffectIcons;
-        public ModSetting<int> _statusIconMaxSize, _statusIconMinSize, _statusIconMinAlpha;
+        public ModSetting<int> _statusIconMaxSize, _statusIconMinSize, _statusIconMinAlpha, _statusIconChangeThreshold;
         public ModSetting<bool> _hideQuickslotHints;
         public ModSetting<bool> _alternativeManaBarPlacement;
         public ModSetting<int> _shopAndStashWidth;
@@ -87,7 +89,7 @@ public class GUI : AMod, IDelayedInit, IUpdatable
         public Vector2 StatusIconScale(float progress)
         => _statusIconMinSize.Value.Lerp(_statusIconMaxSize, progress).Div(100f).ToVector2();
         public float StatusIconAlpha(float progress)
-        => _statusIconMinAlpha.Value.Div(100).Lerp(1f, progress);
+        => _statusIconMinAlpha.Value.ToFloat().Div(100).Lerp(1f, progress);
         public void CopySettings(PerPlayerSettings otherPlayerSettings)
         {
             _rearrangeHUD.Value = otherPlayerSettings._rearrangeHUD;
@@ -96,6 +98,7 @@ public class GUI : AMod, IDelayedInit, IUpdatable
             _statusIconMaxSize.Value = otherPlayerSettings._statusIconMaxSize;
             _statusIconMinSize.Value = otherPlayerSettings._statusIconMinSize;
             _statusIconMinAlpha.Value = otherPlayerSettings._statusIconMinAlpha;
+            _statusIconChangeThreshold.Value = otherPlayerSettings._statusIconChangeThreshold;
             _hideQuickslotHints.Value = otherPlayerSettings._hideQuickslotHints;
             _alternativeManaBarPlacement.Value = otherPlayerSettings._alternativeManaBarPlacement;
             _shopAndStashWidth.Value = otherPlayerSettings._shopAndStashWidth;
@@ -147,6 +150,7 @@ public class GUI : AMod, IDelayedInit, IUpdatable
             tmp._statusIconMaxSize = CreateSetting(playerPrefix + nameof(tmp._statusIconMaxSize), 120, IntRange(100, 125));
             tmp._statusIconMinSize = CreateSetting(playerPrefix + nameof(tmp._statusIconMinSize), 60, IntRange(0, 100));
             tmp._statusIconMinAlpha = CreateSetting(playerPrefix + nameof(tmp._statusIconMinAlpha), 50, IntRange(0, 100));
+            tmp._statusIconChangeThreshold = CreateSetting(playerPrefix + nameof(tmp._statusIconChangeThreshold), 0, IntRange(0, 200));
             tmp._hideQuickslotHints = CreateSetting(playerPrefix + nameof(tmp._hideQuickslotHints), false);
             tmp._alternativeManaBarPlacement = CreateSetting(playerPrefix + nameof(tmp._alternativeManaBarPlacement), false);
             foreach (var hudGroup in DATA_BY_HUD_GROUP.Keys.ToArray())
@@ -253,10 +257,12 @@ public class GUI : AMod, IDelayedInit, IUpdatable
                 {
                     tmp._statusIconMaxSize.Format("Max size", tmp._fadingStatusEffectIcons);
                     tmp._statusIconMaxSize.Description = "Icon size at maximum status effect duration";
-                    tmp._statusIconMinSize.Format("Min size", tmp._fadingStatusEffectIcons);
-                    tmp._statusIconMinSize.Description = "Icon size right before the status effect expires";
-                    tmp._statusIconMinAlpha.Format("Min opacity", tmp._fadingStatusEffectIcons);
-                    tmp._statusIconMinAlpha.Description = "Icon opacity right before the status effect expires";
+                    tmp._statusIconChangeThreshold.Format("Duration Left", tmp._fadingStatusEffectIcons);
+                    tmp._statusIconChangeThreshold.Description = "Only activate opacity and size when less than this many seconds";
+                    tmp._statusIconMinSize.Format("Size when expired", tmp._fadingStatusEffectIcons);
+                    tmp._statusIconMinSize.Description = "When 'Duration Left' starts, the icon will shrink towards this size until it expires.";
+                    tmp._statusIconMinAlpha.Format("Opacity when expired", tmp._fadingStatusEffectIcons);
+                    tmp._statusIconMinAlpha.Description = "When 'Duration Left' starts, the icon will become more opaque towards this value until it expires.";
                 }
                 tmp._hideQuickslotHints.Format("Hide quickslot hints", tmp._toggle);
                 tmp._hideQuickslotHints.Description = "Keyboard - hides the key names above quickslots\n" +
@@ -308,6 +314,7 @@ public class GUI : AMod, IDelayedInit, IUpdatable
                             settings._statusIconMaxSize.Value = 120;
                             settings._statusIconMinSize.Value = 60;
                             settings._statusIconMinAlpha.Value = 50;
+                            settings._statusIconChangeThreshold.Value = 60;
                         }
                         settings._hideQuickslotHints.Value = true;
                         settings._alternativeManaBarPlacement.Value = true;
@@ -751,6 +758,7 @@ public class GUI : AMod, IDelayedInit, IUpdatable
 
         __instance.m_rectTransform.localPosition *= -1;
     }
+    public delegate int EHsample(int a, int b);
 
     // Status effect duration
     [HarmonyPostfix, HarmonyPatch(typeof(StatusEffectPanel), nameof(StatusEffectPanel.GetStatusIcon))]
@@ -763,23 +771,16 @@ public class GUI : AMod, IDelayedInit, IUpdatable
         #endregion
 
         StatusEffect statusEffect = __instance.m_cachedStatus;
-        float progress;
-        if (statusEffect.TryAs(out Disease disease) && disease.IsReceding)
-        {
-            float elapsed = Utils.GameTime - disease.m_healedGameTime;
-            float duration = DiseaseLibrary.Instance.GetRecedingTime(disease.m_diseasesType);
-            progress = 1f - elapsed / duration;
-        }
-        else if (statusEffect.Permanent)
-            progress = 1f;
-        else
-        {
-            float maxDuration = Prefabs.StatusEffectsByNameID[statusEffect.IdentifierName].StartLifespan;
-            float remainingDuration = statusEffect.RemainingLifespan;
-            progress = remainingDuration / maxDuration;
-        }
 
-        __result.m_icon.SetAlpha(settings.StatusIconAlpha(progress));
-        __result.m_icon.rectTransform.localScale = settings.StatusIconScale(progress);
+        int changeThreshold = settings._statusIconChangeThreshold.Value;
+        int remainingDuration = (int)statusEffect.RemainingLifespan;
+        int maxDuration = (int)Prefabs.StatusEffectsByNameID[statusEffect.IdentifierName].StartLifespan;
+        float progress = remainingDuration / maxDuration;
+
+        float fixed_lerp_val = Convert.ToByte(statusEffect.Permanent || remainingDuration > changeThreshold); // true = 1
+        float lerp_val = Math.Max(fixed_lerp_val, progress);
+
+        __result.m_icon.SetAlpha(settings.StatusIconAlpha(lerp_val));
+        __result.m_icon.rectTransform.localScale = settings.StatusIconScale(lerp_val);
     }
 }

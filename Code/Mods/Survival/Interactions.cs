@@ -359,7 +359,7 @@ public class Interactions : AMod, IDelayedInit
         || !__instance.CurrentTriggerManager.TryAs<InteractionActivator>(out var activator)
         || !activator.BasicInteraction.TryNonNull(out var interaction)
         || (interaction.IsNot<InteractionOpenContainer>() || !flags.HasFlag(DisallowedInCombat.Loot))
-        && (interaction.IsNot<InteractionSwitchArea>() || !flags.HasFlag(DisallowedInCombat.Travel))
+        && (interaction.IsNot<InteractionSwitchArea>() || !flags.HasFlag(DisallowedInCombat.Travel) || AlternateStart.temporaryAllowedTravel)
         && (interaction.IsNot<InteractionWarp>() || !flags.HasFlag(DisallowedInCombat.Warp))
         && (interaction.IsNot<InteractionToggleContraption>() || !flags.HasFlag(DisallowedInCombat.PullLever))
         && (interaction.IsNot<InteractionRevive>() || !flags.HasFlag(DisallowedInCombat.PullLever)))

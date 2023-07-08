@@ -3,6 +3,7 @@
 internal class ModSections
 {
     public const string Development = "    \nDEVELOPMENT";
+    public const string Compatibility = "   \nCOMPATIBILITY";
     public const string SurvivalAndImmersion = "   \nSURVIVAL & IMMERSION";
     public const string Combat = "  \nCOMBAT";
     public const string Skills = " \nSKILLS";

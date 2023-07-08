@@ -40,6 +40,9 @@ public class Main : BepInExEntryPoint
     };
     protected override Type[] ModsOrderingList => new[]
     {
+        // Compatibility
+        typeof(TrueHardcore),
+
         // Survival & Immersion
         typeof(Needs),
         typeof(Camping),

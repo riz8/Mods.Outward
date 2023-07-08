@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Code\ModSections.cs" />
+    <Compile Include="Code\Mods\Compatilibity\TrueHardcore.cs" />
     <Compile Include="Code\Players.cs" />
     <Compile Include="Code\Prefabs.cs" />
     <Compile Include="Code\GameInput.cs" />
@@ -158,6 +159,11 @@
     </Reference>
     <Reference Include="ConfigurationManager">
       <HintPath>..\BepInEx.ConfigurationManager\Release\BepInEx\plugins\ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="HardcoreRebalance, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Modding\Outward\Mods\TrueHardcore2.9.2\plugins\HardcoreRebalance.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.dll</HintPath>

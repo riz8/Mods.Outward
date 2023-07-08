@@ -236,7 +236,9 @@ public class Crafting : AMod
         bool isMulti = _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.Lanterns) && _itemID.IsContainedIn(LANTERN_IDS)
                     || _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.Relics) && _itemID.IsContainedIn(RELIC_IDS)
                     || _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.HailfrostWeapons) && _itemID.IsContainedIn(HAILFROST_WEAPONS_IDS)
-                    || _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.UniqueWeapons) && _itemID.IsContainedIn(UNIQUE_WEAPONS_IDS);
+                    || _limitedManulCraftingExceptions.Value.HasFlag(CraftingExceptions.UniqueWeapons) && _itemID.IsContainedIn(UNIQUE_WEAPONS_IDS)
+                    || TrueHardcore._limitedManualCraftingTrueHardcore.Value && ((int)HardcoreRebalance.HardcoreItems.ElattPiece).CompareTo(_itemID) == 0
+                    ;
         SetSingleIngredientCrafting(__instance, !isMulti);
     }
 

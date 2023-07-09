@@ -170,7 +170,7 @@ public class SkillPrices : AMod
 
         // Price
         if (_formulaToggle)
-            slot.m_requiredMoney = GetPrice(__instance.LocalCharacter, slot);
+            slot.m_requiredMoney = AlternateStart.temporarySkillPriceModifier * GetPrice(__instance.LocalCharacter, slot);
 
         // Currency
         if (_learnMutuallyExclusiveSkills && HasMutuallyExclusiveSkill(__instance.LocalCharacter, slot))

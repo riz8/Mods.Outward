@@ -8,7 +8,9 @@ public class Various : AMod, IUpdatable
     private static ModSetting<bool> _titleScreenCharacters;
     private static ModSetting<bool> _debugMode;
     private static ModSetting<string> _debugModeToggleKey;
-    private static ModSetting<ArmorSlots> _visibleArmorSlots;
+    private static ModSetting<bool> _visibleArmorSlots;
+    private static ModSetting<ArmorSlots> _visibleArmorSlotsEnemy;
+    private static ModSetting<ArmorSlots> _visibleArmorSlotsPlayer;
     private static ModSetting<bool> _multiplayerScaling;
     private static ModSetting<bool> _enemiesHealOnLoad;
     private static ModSetting<bool> _multiplicativeStatsStacking;
@@ -27,7 +29,9 @@ public class Various : AMod, IUpdatable
         _titleScreenCharacters = CreateSetting(nameof(_titleScreenCharacters), true);
         _debugMode = CreateSetting(nameof(_debugMode), false);
         _debugModeToggleKey = CreateSetting(nameof(_debugModeToggleKey), "");
-        _visibleArmorSlots = CreateSetting(nameof(_visibleArmorSlots), ArmorSlots.None);
+        _visibleArmorSlots = CreateSetting(nameof(_visibleArmorSlots), false);
+        _visibleArmorSlotsEnemy = CreateSetting(nameof(_visibleArmorSlotsEnemy), ArmorSlots.All);
+        _visibleArmorSlotsPlayer = CreateSetting(nameof(_visibleArmorSlotsPlayer), ArmorSlots.All);
         _multiplayerScaling = CreateSetting(nameof(_multiplayerScaling), false);
         _enemiesHealOnLoad = CreateSetting(nameof(_enemiesHealOnLoad), false);
         _multiplicativeStatsStacking = CreateSetting(nameof(_multiplicativeStatsStacking), false);
@@ -62,7 +66,9 @@ public class Various : AMod, IUpdatable
                 _titleScreenCharacters.Value = true;
                 _debugMode.Value = false;
                 _debugModeToggleKey.Value = KeyCode.Keypad0.ToString();
-                _visibleArmorSlots.Value = ArmorSlots.All;
+                _visibleArmorSlots.Value = true;
+                _visibleArmorSlotsEnemy.Value = ArmorSlots.All;
+                _visibleArmorSlotsPlayer.Value = ArmorSlots.All;
                 _multiplayerScaling.Value = false;
                 _enemiesHealOnLoad.Value = true;
                 _multiplicativeStatsStacking.Value = true;
@@ -121,10 +127,13 @@ public class Various : AMod, IUpdatable
                 $"\n\nvalue type: case-insensitive {nameof(KeyCode)} enum" +
                 $"\n(https://docs.unity3d.com/ScriptReference/KeyCode.html)";
         }
-
         _visibleArmorSlots.Format("Visible armor slots");
-        _visibleArmorSlots.Description =
-            "Allows you to hides ugly armor parts (mostly helmets)";
+        _visibleArmorSlots.Description = "Show/Hide armor slots. Applies after changing/reload zone/instance";
+        using (Indent)
+        {
+            _visibleArmorSlotsEnemy.Format("Enemies");
+            _visibleArmorSlotsPlayer.Format("Player");
+        }
         _multiplayerScaling.Format("Multiplayer scaling");
         _multiplayerScaling.Description =
             "Makes enemies' stats scale up in multiplayer";
@@ -193,10 +202,9 @@ public class Various : AMod, IUpdatable
     #region Utility
     private const int DropOneActionID = -2;
     private const string DropOneActionText = "Drop one";
-    private static bool ShouldArmorSlotBeHidden(EquipmentSlot.EquipmentSlotIDs slot)
-        => slot == EquipmentSlot.EquipmentSlotIDs.Helmet && !_visibleArmorSlots.Value.HasFlag(ArmorSlots.Head)
-        || slot == EquipmentSlot.EquipmentSlotIDs.Chest && !_visibleArmorSlots.Value.HasFlag(ArmorSlots.Chest)
-        || slot == EquipmentSlot.EquipmentSlotIDs.Foot && !_visibleArmorSlots.Value.HasFlag(ArmorSlots.Feet);
+
+
+
     private static bool HasLearnedArmorTraining(Character character)
         => character.Inventory.SkillKnowledge.IsItemLearned("Armor Training".ToSkillID());
     private static bool TryApplyMultiplicativeStacking(CharacterEquipment equipment, ref float result, Func<EquipmentSlot, float> getStatValue, bool invertedPositivity = false, bool applyArmorTraining = false)
@@ -371,20 +379,42 @@ public class Various : AMod, IUpdatable
     private static bool CharacterEquipment_GetTotalManaUseModifier_Pre(CharacterEquipment __instance, ref float __result)
         => TryApplyMultiplicativeStacking(__instance, ref __result, slot => slot.EquippedItem.ManaUseModifier, false, _armorTrainingAffectManaCost);
 
+    private static bool ShouldArmorSlotBeHidden(EquipmentSlot.EquipmentSlotIDs slot, bool isPlayer)
+        =>
+            (
+                isPlayer
+            &&  slot == EquipmentSlot.EquipmentSlotIDs.Helmet && !_visibleArmorSlotsPlayer.Value.HasFlag(ArmorSlots.Head)
+            ||  slot == EquipmentSlot.EquipmentSlotIDs.Chest && !_visibleArmorSlotsPlayer.Value.HasFlag(ArmorSlots.Chest)
+            ||  slot == EquipmentSlot.EquipmentSlotIDs.Foot && !_visibleArmorSlotsPlayer.Value.HasFlag(ArmorSlots.Feet)
+            )
+                ||
+            (
+                slot == EquipmentSlot.EquipmentSlotIDs.Helmet && !_visibleArmorSlotsEnemy.Value.HasFlag(ArmorSlots.Head)
+            ||  slot == EquipmentSlot.EquipmentSlotIDs.Chest && !_visibleArmorSlotsEnemy.Value.HasFlag(ArmorSlots.Chest)
+            ||  slot == EquipmentSlot.EquipmentSlotIDs.Foot && !_visibleArmorSlotsEnemy.Value.HasFlag(ArmorSlots.Feet)
+            );
+
     // Hide armor slots
     [HarmonyPrefix, HarmonyPatch(typeof(CharacterVisuals), nameof(CharacterVisuals.EquipVisuals))]
-    private static void CharacterVisuals_EquipVisuals_Pre(ref bool[] __state, ref EquipmentSlot.EquipmentSlotIDs _slotID, ref ArmorVisuals _visuals)
+    private static void CharacterVisuals_EquipVisuals_Pre(CharacterVisuals __instance, ref bool[] __state, ref EquipmentSlot.EquipmentSlotIDs _slotID, ref ArmorVisuals _visuals)
     {
-        if (_visibleArmorSlots == ArmorSlots.All)
+        bool isPlayer = __instance.Character.IsPlayer();
+
+        if      (
+                    (isPlayer && _visibleArmorSlotsPlayer == ArmorSlots.All)
+                ||  (_visibleArmorSlotsEnemy == ArmorSlots.All)
+                ||  (_visuals.ArmorExtras.Length > 0)) // Enemy has special outfit, like special bandits or bosses
             return;
 
-        // save original hide flags for postfix
+
+        // Game will hide face and hair if enemy has helmet, to avoid clipping.
+        // Save these values so we can apply them in case we remove helmet
         __state = new bool[3];
         __state[0] = _visuals.HideFace;
         __state[1] = _visuals.HideHair;
         __state[2] = _visuals.DisableDefaultVisuals;
-        // override hide flags
-        if (ShouldArmorSlotBeHidden(_slotID))
+
+        if (ShouldArmorSlotBeHidden(_slotID, isPlayer))
         {
             _visuals.HideFace = false;
             _visuals.HideHair = false;
@@ -393,13 +423,13 @@ public class Various : AMod, IUpdatable
     }
 
     [HarmonyPostfix, HarmonyPatch(typeof(CharacterVisuals), nameof(CharacterVisuals.EquipVisuals))]
-    private static void CharacterVisuals_EquipVisuals_Post(ref bool[] __state, ref EquipmentSlot.EquipmentSlotIDs _slotID, ref ArmorVisuals _visuals)
+    private static void CharacterVisuals_EquipVisuals_Post(CharacterVisuals __instance, ref bool[] __state, ref EquipmentSlot.EquipmentSlotIDs _slotID, ref ArmorVisuals _visuals)
     {
-        if (_visibleArmorSlots == ArmorSlots.All)
+        if (__state == null) // No change was made in pre hook
             return;
 
-        // hide chosen pieces of armor
-        if (ShouldArmorSlotBeHidden(_slotID))
+        bool isPlayer = __instance.Character.IsPlayer();
+        if (ShouldArmorSlotBeHidden(_slotID, isPlayer))
             _visuals.Hide();
 
         // restore original hide flags

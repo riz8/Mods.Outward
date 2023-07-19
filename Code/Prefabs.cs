@@ -56,6 +56,14 @@ public static class Prefabs
     // Cache
     public static readonly Dictionary<string, int> ItemIDsByName = new(StringComparer.OrdinalIgnoreCase)
     {
+        // Items
+        ["BeggarArmor A"] = 3000130,
+        ["Hatchet"] = 2010050,
+
+        // Keys
+        ["Cierzo Town Key"] = 5600029,
+
+        // Food
         ["Torcrab Egg"] = 4000480,
         ["Boreo Blubber"] = 4000500,
         ["Pungent Paste"] = 4100190,
@@ -71,11 +79,13 @@ public static class Prefabs
         ["Food Waste"] = 4100000,
         ["Warm Boozu’s Milk"] = 4100680,
 
+        // Cure
         ["Panacea"] = 4300370,
         ["Antidote"] = 4300110,
         ["Hex Cleaner"] = 4300190,
         ["Invigorating Potion"] = 4300280,
 
+        // Drink
         ["Able Tea"] = 4200090,
         ["Bitter Spicy Tea"] = 4200050,
         ["Greasy Tea"] = 4200110,
@@ -87,6 +97,7 @@ public static class Prefabs
         ["Gaberry Wine"] = 4100590,
         ["Gep's Drink"] = 4300040,
 
+        // Restore
         ["Waterskin"] = 4200040,
         ["Ambraine"] = 4000430,
         ["Bandages"] = 4400010,
@@ -94,6 +105,7 @@ public static class Prefabs
 
         ["MistakenIngestible"] = 4500020,
 
+        // Item Crafts
         ["Old Legion Shield"] = 2300070,
         ["Boiled Azure Shrimp"] = 4100540,
         ["Coralhorn Antler"] = 6600060,
@@ -104,6 +116,7 @@ public static class Prefabs
         ["Gold Ingot"] = 6300030,
         ["Tsar Stone"] = 6200010,
 
+        // Lanterns
         ["Explorer Lantern"] = 5100000,
         ["Old Lantern"] = 5100010,
         ["Glowstone Lantern"] = 5100020,
@@ -113,6 +126,7 @@ public static class Prefabs
         ["Virgin Lantern"] = 5100100,
         ["Djinn’s Lamp"] = 5100110,
 
+        // Relics
         ["Calixa’s Relic"] = 6600225,
         ["Elatt’s Relic"] = 6600222,
         ["Gep’s Generosity"] = 6600220,
@@ -128,6 +142,7 @@ public static class Prefabs
         ["Scarlet Whisper"] = 6600231,
         ["Calygrey’s Wisdom"] = 6600233,
 
+        // Hailfrost
         ["Hailfrost Claymore"] = 2100270,
         ["Hailfrost Mace"] = 2020290,
         ["Hailfrost Hammer"] = 2120240,
@@ -150,13 +165,16 @@ public static class Prefabs
         ["Unusual Knuckles"] = 2160230,
         ["Strange Rusted Sword"] = 2000151,
 
+        // Tools
         ["Flint and Steel"] = 5600010,
         ["Fishing Harpoon"] = 2130130,
         ["Mining Pick"] = 2120050,
 
+        // Torch
         ["Makeshift Torch"] = 5100060,
         ["Ice-Flame Torch"] = 5100070,
 
+        // Projectile
         ["Bullet"] = 4400080,
         ["Arrow"] = 5200001,
         ["Flaming Arrow"] = 5200002,
@@ -169,6 +187,7 @@ public static class Prefabs
         ["Soul Rupture Arrow"] = 5200010,
         ["Mana Arrow"] = 5200019,
 
+        // Backpacks
         ["Adventurer Backpack"] = 5300000,
     };
     public static readonly Dictionary<string, int> SkillIDsByName = new(StringComparer.OrdinalIgnoreCase)

@@ -772,14 +772,16 @@ public class GUI : AMod, IDelayedInit, IUpdatable
 
         StatusEffect statusEffect = __instance.m_cachedStatus;
 
+        int mortalityStatus = Convert.ToByte(statusEffect.UID == TrueHardcore.mortalityStatusUID); // true = 1 
+
         int changeThreshold = settings._statusIconChangeThreshold.Value;
-        int remainingDuration = (int)statusEffect.RemainingLifespan;
-        int maxDuration = (int)Prefabs.StatusEffectsByNameID[statusEffect.IdentifierName].StartLifespan;
+        int remainingDuration = Math.Max(mortalityStatus, (int)statusEffect.RemainingLifespan);
+        int maxDuration = Math.Abs((int)Prefabs.StatusEffectsByNameID[statusEffect.IdentifierName].StartLifespan);
         float progress = remainingDuration / maxDuration;
 
         float fixed_lerp_val = Convert.ToByte(statusEffect.Permanent || remainingDuration > changeThreshold); // true = 1
         float lerp_val = Math.Max(fixed_lerp_val, progress);
-
+       
         __result.m_icon.SetAlpha(settings.StatusIconAlpha(lerp_val));
         __result.m_icon.rectTransform.localScale = settings.StatusIconScale(lerp_val);
     }

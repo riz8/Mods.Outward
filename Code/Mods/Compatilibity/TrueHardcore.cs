@@ -12,6 +12,7 @@ public class TrueHardcore : AMod
     #endregion
 
     public static ModSetting<bool> _trueHardcoreEnabled;
+    public static readonly UID mortalityStatusUID = "4BN0PSfq2kaTEQTzvOy3Nw";
     protected override void Initialize()
     {
         _trueHardcoreEnabled = CreateSetting(nameof(_trueHardcoreEnabled), false);

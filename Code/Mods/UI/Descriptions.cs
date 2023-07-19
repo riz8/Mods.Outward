@@ -681,6 +681,9 @@ public class Descriptions : AMod, IDelayedInit
         Image icon = __instance.FindChild<Image>("Icon");
         Image border = icon.FindChild<Image>("border");
 
+        if (!__instance || !icon || !border)
+            return;
+
         //Defaults
         icon.color = Color.white;
         border.color = Color.white;

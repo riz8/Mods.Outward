@@ -335,3 +335,5 @@ ASALocalRun/
 
 # Development stuff
 Private
+
+dependencies/*

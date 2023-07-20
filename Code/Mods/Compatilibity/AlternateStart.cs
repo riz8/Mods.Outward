@@ -1,5 +1,7 @@
 ﻿using AlternateStart.StartScenarios;
 using SideLoader;
+using static MapMagic.ObjectPool;
+using UnityEngine.SceneManagement;
 
 namespace Vheos.Mods.Outward;
 
@@ -17,8 +19,8 @@ public class AlternateStart : AMod
     private static readonly int ZHORN_DEMON_SHIELD_ID = "Zhorns Demon Shield".ToItemID();
     private static readonly int ZHORN_HUNTING_BACKPACK_ID = "Zhorns Hunting Backpack".ToItemID();
     private static readonly int ZHORN_GLOWSTONE_DAGGER_ID = "Zhorns Glowstone Dagger".ToItemID();
-    private static readonly int ASH_ARMOR_ID = "Ash Armor".ToItemID();
-    private static readonly int ASH_BOOTS_ID = "Ash Boots".ToItemID();
+    private static readonly int ELITE_DESERT_TUNIC_ID = "Elite Desert Tunic".ToItemID();
+    private static readonly int KINTSUGI_BOOTS_ID = "Kintsugi Boots".ToItemID();
     private static readonly int ELITE_HOOD_ID = "Elite Hood".ToItemID();
     private static readonly int FANG_CLUB_ID = "Fang Club".ToItemID();
 
@@ -143,13 +145,15 @@ public class AlternateStart : AMod
         if (!_giantRobCustom.Value)
             return true;
 
-        character.Inventory.ReceiveItemReward(ZHORN_HUNTING_BACKPACK_ID, 1, true);
-        character.Inventory.ReceiveItemReward(ASH_ARMOR_ID, 1, true);
-        character.Inventory.ReceiveItemReward(ASH_BOOTS_ID, 1, true);
+        character.Inventory.ReceiveItemReward(ELITE_DESERT_TUNIC_ID, 1, true);
+        character.Inventory.ReceiveItemReward(KINTSUGI_BOOTS_ID, 1, true);
         character.Inventory.ReceiveItemReward(ELITE_HOOD_ID, 1, true);
         character.Inventory.ReceiveItemReward(FANG_CLUB_ID, 1, true);
         character.Inventory.ReceiveItemReward(ZHORN_DEMON_SHIELD_ID, 1, true);
-        //character.Inventory.ReceiveItemReward(ZHORN_GLOWSTONE_DAGGER_ID, 1, true);
+        character.Inventory.ReceiveItemReward(WATERSKIN_ID, 1, false);
+        character.Inventory.ReceiveItemReward(FLINT_AND_STEEL_ID, 1, false);
+        character.Inventory.ReceiveItemReward(ZHORN_GLOWSTONE_DAGGER_ID, 1, false);
+        character.Inventory.ReceiveItemReward(ZHORN_HUNTING_BACKPACK_ID, 1, false);
 
         return false;
     }

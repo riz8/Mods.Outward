@@ -66,6 +66,8 @@ public static class Prefabs
         ["Ash Boots"] = 3000222,
         ["Elite Hood"] = 3000037,
         ["Fang Club"] = 2020050,
+        ["Kintsugi Boots"] = 3100072,
+        ["Elite Desert Tunic"] = 3000202,
 
         // Keys
         ["Cierzo Town Key"] = 5600029,

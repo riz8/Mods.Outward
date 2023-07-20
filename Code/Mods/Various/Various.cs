@@ -402,8 +402,8 @@ public class Various : AMod, IUpdatable
 
         if      (
                     (isPlayer && _visibleArmorSlotsPlayer == ArmorSlots.All)
-                ||  (_visibleArmorSlotsEnemy == ArmorSlots.All)
-                ||  (_visuals.ArmorExtras.Length > 0)) // Enemy has special outfit, like special bandits or bosses
+                ||  (!isPlayer && _visibleArmorSlotsEnemy == ArmorSlots.All)
+                ||  (!isPlayer && _visuals.ArmorExtras.Length > 0)) // Enemy has special outfit, like special bandits or bosses
             return;
 
 

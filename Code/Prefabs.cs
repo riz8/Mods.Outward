@@ -59,6 +59,13 @@ public static class Prefabs
         // Items
         ["BeggarArmor A"] = 3000130,
         ["Hatchet"] = 2010050,
+        ["Zhorns Demon Shield"] = 2300030,
+        ["Zhorns Glowstone Dagger" ] = 5110005,
+        ["Ash Armor"] = 3000220,
+        ["Ash Helmet"] = 3000221,
+        ["Ash Boots"] = 3000222,
+        ["Elite Hood"] = 3000037,
+        ["Fang Club"] = 2020050,
 
         // Keys
         ["Cierzo Town Key"] = 5600029,
@@ -189,6 +196,7 @@ public static class Prefabs
 
         // Backpacks
         ["Adventurer Backpack"] = 5300000,
+        ["Zhorns Hunting Backpack"] = 5300180,
     };
     public static readonly Dictionary<string, int> SkillIDsByName = new(StringComparer.OrdinalIgnoreCase)
     {
